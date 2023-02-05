@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Method</title>
+    <link rel="stylesheet" href=" https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css "
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            align-items: center;
+            text-align: left;
+        }
+
+        #form-container {
+            border-right: 5px solid rgb(235, 190, 190);
+            padding: 0 10px;
+            margin-right: 0%;
+            text-align: left;
+        }
+
+        #list {
+            padding: 0 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+             <h3 style="text-align: left;">shaikh fazil</h3>
+
+    <div class="container mt-2">
+      
+        <button class="btn btn-secondary">Select Payment Method</button>
+        <br>
+        <input name="radiofrm" type="radio" onclick="creditdebitcard()"> 
+        <label for="card">Credit/Debit Card</label>
+        <br>
+        
+        <input name="radiofrm" type="radio" onclick="upi()"> 
+        <label for="upi">UPI number</label>
+        <br>
+        <input name="radiofrm" type="radio" onclick="account()"> 
+        <label for="account">Account</label>
+        <br>
+        <hr style="border: 2px solid;">
+
+        <div class="row justify-content-center">
+            <div class="col-6" id="form-container">
+
+
+                <form id="frmcard" class="form-card" style="display: none;">
+                    <h1>Credit/Debit Card Form </h1>
+                    <p id="card-error" class="text-danger"></p>
+                    <hr>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input onblur="validatecardno()" type="number" class="form-control" id="cardnumber"
+                                        placeholder="Enter Credit Card Number">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input onblur="validatecname()" type="text" class="form-control" id="cardname"
+                                        placeholder="Enter your name on card">
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group mr-3">
+                                    <input type="date" class="form-control" id="cardexpiry" disabled>
+                                </div>
+                            </td>
+                            <td style="width: 50%;">
+                                <div class="form-group">
+                                    <select class="custom-select" id="cardtype">
+                                        <option selected>Choose...</option>
+                                        <option value="Visa">Visa</option>
+                                        <option value="Master">Master</option>
+                                        <option value="Rupay">Rupay</option>
+                                        <option value="other">other</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><button id="cvvbtn" class="btn btn-secondary" type="button"
+                                    onclick="genrateCVV()" style="width: 100%;">Generate
+                                    CVV</button></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group mt-3" style="width: 50%;margin: 1rem auto;">
+                                    <input type="number" class="form-control" id="cardcvv" placeholder="Enter CVV">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><button id="scard" type="button" onclick="savecard()"
+                                    class="btn btn-secondary" style="width: 100%;">Save
+                                    Card</button></td>
+                        </tr>
+                    </table>
+                    <hr>
+
+                </form>
+
+                <form id="frmupi" class="form form-upi" style="display: none;">
+                    <h1>UPI Payment Form </h1>
+                    <p id="upi-error" class="text-danger"></p>
+                    <hr>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input type="number" class="form-control" onblur="validationupino()" id="upinumber"
+                                        placeholder="Enter UPI number">
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="upiname" placeholder="Enter Your Name">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><button class="btn btn-secondary" type="button" onclick="genrateupiCVV()"
+                                    style="width: 100%;">Generate
+                                    CVV</button></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group mt-3" style="width: 50%;margin: 1rem auto;">
+                                    <input type="number" class="form-control" id="upicvv" placeholder="Enter CVV">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><button id="saveupibtn" type="button" onclick="saveupi()"
+                                    class="btn btn-secondary" style="width: 100%;">Save UPI
+                                    Number</button></td>
+                        </tr>
+                    </table>
+                    <hr>
+
+                </form>
+
+
+                <form id="frmaccount" class="form form-account" style="display: none;">
+                    <h1>Account Payment Form </h1>
+                    <p id="accounterror" class="text-danger"></p>
+                    <hr>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="accountname"
+                                        placeholder="Enter Your Name">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input type="number" class="form-control" id="accountnumber"
+                                        placeholder="Enter Account Number">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group">
+                                    <input type="number" class="form-control" id="reaccountnumber"
+                                        placeholder="Re-Enter Account Number">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;">
+                                <div class="form-group mr-3">
+                                    <input type="text" class="form-control" id="ifccode" placeholder="IFSC Code">
+                                </div>
+                            </td>
+                            <td style="width: 50%;">
+                                <div class="form-group mr-3">
+                                    <input type="text" class="form-control" id="branchname" placeholder="Branch Name">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><button class="btn btn-secondary" type="button"
+                                    onclick="genrateaccountCVV()" style="width: 100%;">Generate
+                                    CVV</button></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="form-group mt-3" style="width: 50%;margin: 1rem auto;">
+                                    <input type="number" class="form-control" id="acccvv" placeholder="Enter CVV">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><button class="btn btn-secondary" type="button" onclick="saveaccount()"
+                                    style="width: 100%;">Save
+                                    Account Details</button></td>
+                        </tr>
+                    </table>
+                    <hr>
+
+                </form>
+                <br>
+                <br>
+                <form id="frmdetailsPage" class="form form-account" style="display: none;">
+                    <h1>Details Page </h1>
+                    <label for=""> Name : <span id="spanName"></span></label> <br>
+                    <label for=""> Method Type : <span id="spanmethodtype"></span></label>
+                    <hr>
+
+                </form>
+
+            </div>
+            <div id="col-6">
+                <div style="overflow-x: auto;" id="list">
+                    <h1>List of saved details <span id="card-error"></span></h1>
+                    <br>
+                    <table id="tblcarddetails" class="table table-bordered mt-3">
+                        <tr>
+                            <th>Name</th>
+                            <th>Method Type</th>
+                            <th colspan="2">Action</th>
+                         
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+
+    var cardsarry = ['1234567891112456', '1112223334445556'];
+    var cardno = "";
+    function validatecardno() {
+
+        cardno = document.getElementById("cardnumber").value;
+
+        if (!cardsarry.includes(cardno)) {
+
+            document.getElementById("card-error").innerHTML = "Enter valid card number";
+        }
+        else {
+
+            document.getElementById("card-error").innerHTML = "";
+            //alert(" Your Accepted")
+        }
+    }
+    // validation
+    function creditdebitcard() {
+        var creditcard = document.getElementById("frmupi").style.display = "none";
+        var creditcard = document.getElementById("frmaccount").style.display = "none";
+
+
+        var creditcard = document.getElementById("frmcard").style.display = "block";
+
+    }
+    function validatecname() {
+
+        let cardname = document.getElementById("cardname").value;
+        if (cardname.length > 0 && cardsarry.includes(cardno)) {
+
+            document.getElementById("cardexpiry").value = "2025-10-10";
+        }
+        else {
+            document.getElementById("cardexpiry").value = "yyyy-mm-dd";
+        }
+    }
+    function upi() {
+
+        var creditcard = document.getElementById("frmupi").style.display = "block";
+        var creditcard = document.getElementById("frmaccount").style.display = "none";
+
+
+        var creditcard = document.getElementById("frmcard").style.display = "none";
+    }
+
+    function account() {
+
+        var creditcard = document.getElementById("frmupi").style.display = "none";
+        var creditcard = document.getElementById("frmaccount").style.display = "block";
+
+
+        var creditcard = document.getElementById("frmcard").style.display = "none";
+
+
+    }
+
+
+    function genrateCVV() {
+        let cardvar = document.getElementById("cardnumber").value;
+        let lastthree = cardvar.substr(cardvar.length - 3);
+        document.getElementById("cardcvv").value = lastthree;
+    }
+
+    var row= 1;
+    function addrowintable(carname, methodtype) {
+
+        let tblcards = document.getElementById("tblcarddetails");
+        var newRow = tblcards.insertRow(row);
+
+
+        var cell1 = newRow.insertCell(0);
+        var cell2 = newRow.insertCell(1);
+        var cell3 = newRow.insertCell(2);
+        var cell4 = newRow.insertCell(3);
+
+        cell1.innerHTML = carname;
+        cell2.innerHTML = methodtype;
+
+        cell3.innerHTML = `'<button onclick="AddDetails(${row})"  class="btn btn-sm btn-secondary">Full Detail</button class="btn btn-secondary">'`;
+        cell4.innerHTML = `'<button onclick="Remove(${row})" class="btn btn-sm btn-secondary"> Remove </button class="btn btn-secondary">'`;
+            row++;
+
+    }
+
+  
+    function Remove(selectedrow) {
+        document.getElementById("tblcarddetails").deleteRow(selectedrow);
+        row--;
+    }
+
+    function AddDetails(selectedrow) {
+        let tblcards = document.getElementById("tblcarddetails");
+        var cells = tblcards.rows[selectedrow].cells;
+         document.getElementById("frmdetailsPage").style.display="block";
+         document.getElementById("spanName").innerHTML=cells[0].innerHTML;
+         document.getElementById("spanmethodtype").innerHTML=cells[1].innerHTML;
+    }
+
+    function savecard() {
+        let carname = document.getElementById("cardname").value;
+        let carnumber = document.getElementById("cardnumber").value;
+        let ctype = document.getElementById("cardtype").value;
+        let error = document.getElementById("card-error").innerHTML;
+
+
+        if (carname.length > 0 && ctype != "Choose..." && error.length == 0 && carnumber.length != 0) {
+            addrowintable(carname, "Credit/Debit Card");
+
+
+        }
+        else {
+            document.getElementById("card-error").innerHTML = "Enter Valid Card Number, Card Name And Select Card Type";
+        }
+    }
+
+    var upiarry = ['8254630197',
+        '9043681072',
+        '7531208496',
+        '6079356418',
+        '2897503461',
+        '4563872109',
+        ];
+    var upino = "";
+
+    function validationupino() {
+
+
+        upino = document.getElementById("upinumber").value;
+
+        if (upiarry.includes(upino)) {
+
+            return true;
+        }
+        else {
+
+            return false;
+        }
+    }
+
+    function saveupi() {
+
+        upino = document.getElementById("upinumber").value;
+        let upiname = document.getElementById("upiname").value;
+
+
+        if (upino.length > 0 && upiname.length > 0 && validationupino()) {
+
+
+            addrowintable(upiname, "UPI");
+
+
+        }
+        else {
+            document.getElementById("upi-error").innerHTML = "Enter valid UPI number";
+        }
+    }
+
+    function genrateupiCVV() {
+        let upino = document.getElementById("upinumber").value;
+        let lastthree = upino.substr(upino.length - 3);
+        document.getElementById("upicvv").value = lastthree;
+    }
+
+
+    function saveaccount() {
+
+        let acctname = document.getElementById("accountname").value;
+        let acctnumber = document.getElementById("accountnumber").value;
+        let reaccountnumber = document.getElementById("reaccountnumber").value;
+        let ifccode = document.getElementById("ifccode").value;
+        let branchname = document.getElementById("branchname").value;
+
+
+        if (acctname.length == 0) {
+            document.getElementById("accounterror").innerHTML = "Please Enter Account Name";
+            return false;
+        }
+        if (acctnumber.length == 0) {
+            document.getElementById("accounterror").innerHTML = "Please Enter Account Number";
+            return false;
+        }
+        if (reaccountnumber.length == 0) {
+            document.getElementById("accounterror").innerHTML = "Please Renter Account Number";
+            return false;
+        }
+        if (ifccode.length == 0) {
+            document.getElementById("accounterror").innerHTML = "Please Enter IFSC Code";
+            return false;
+        }
+        if (branchname.length == 0) {
+            document.getElementById("accounterror").innerHTML = "Please Enter Branch Name";
+            return false;
+        }
+
+
+        if (acctnumber.length == reaccountnumber.length) {
+            if (acctnumber.length == 10 && reaccountnumber.length == 10) {
+                addrowintable(acctname, "Acount");
+                document.getElementById("accounterror").innerHTML = "";
+
+            }
+            else {
+
+                document.getElementById("accounterror").innerHTML = "Please enter 10 digit number";
+                return false;
+
+            }
+
+
+
+
+        }
+        else {
+            document.getElementById("accounterror").innerHTML = "Your account number not match ";
+            return false;
+        }
+    }
+    function genrateaccountCVV() {
+        let accno = document.getElementById("accountnumber").value;
+        let lastthree = accno.substr(accno.length - 3);
+        document.getElementById("acccvv").value = lastthree;
+    }
+
+
+
+</script>
